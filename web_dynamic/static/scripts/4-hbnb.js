@@ -1,12 +1,12 @@
 $(document).ready(function () {
-  const amenities = {};
+  const amenityObjs = {};
   $('li input[type="checkbox"]').change(function () {
     if (this.checked) {
-      amenities[this.dataset.name] = this.dataset.id;
+      amenityObjs[this.dataset.name] = this.dataset.id;
     } else {
-      delete amenities[this.dataset.name];
+      delete amenityObjs[this.dataset.name];
     }
-    const amenityNames = Object.keys(amenities);
+    const amenityNames = Object.keys(amenityObjs);
     $('div.amenities h4').text(amenityNames.sort().join(', '));
   });
   // get the status of the api to consume
@@ -19,11 +19,11 @@ $(document).ready(function () {
     }
   });
 
-  // Fetch all Places and update the UI
+  // Filter places with the selected amenities and update the UI
   const PLACES_URL = 'http://127.0.0.1:5001/api/v1/places_search/';
   $.post({
     url: PLACES_URL,
-    data: JSON.stringify({}),
+    data: JSON.stringify({amenities: Object.values(amenityObjs)}),
     headers: { 'Content-Type': 'application/json' },
     dataType: 'json',
     success: (data) => {
